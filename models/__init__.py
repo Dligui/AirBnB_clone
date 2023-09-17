@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 
-"""
-Initializes  the module global (singleton) variables
-"""
+""" initializes the application's file storage"""
 
-from .engine.file_storage import FileStorage
-"""
-Retrieves the storage instance
-"""
+from models.engine.file_storage import FileStorage
+
+# Create a unique FileStorage instance
 storage = FileStorage()
+
+# Command the reload() method to populate __objects from the JSON file
 storage.reload()

@@ -1,14 +1,20 @@
 #!/usr/bin/python3
-"""
-This file defines  stateModel class
-"""
 
+"""define state Module"""
 
 from models.base_model import BaseModel
 
 
 class State(BaseModel):
-    # state model
+    """
+    represent state class
 
-    # Atrributes
-    name: str = ''
+    Attributes:
+        name (str): State name
+
+    """
+    name = ""
+
+    def __init__(self, *args, **kwargs):
+        """Initializes a State instance"""
+        super().__init__(*args, **kwargs)

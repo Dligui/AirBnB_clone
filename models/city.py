@@ -1,16 +1,22 @@
 #!/usr/bin/python3
-"""
-Defines City model and
-inherits from BaseMode
-"""
 
+""" deine the City Module"""
 
 from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    # City Model
+    """
+    represent City class
 
-    # Atributes
-    state_id: str = ''
-    name: str = ''
+    Attributes:
+        state_id (str): State id
+        name (str): name of city
+
+    """
+    state_id = ""
+    name = ""
+
+    def __init__(self, *args, **kwargs):
+        """Initializes a City instance"""
+        super().__init__(*args, **kwargs)
