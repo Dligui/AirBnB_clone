@@ -1,4 +1,4 @@
-"""Testing the `base_model` module."""
+"""Testing thee `base_model` module."""
 import json
 import os
 import time
@@ -99,4 +99,3 @@ class TestBase(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -2,7 +2,7 @@
 """The `amenity` module
 
 It defines one class, `Amenity(),
-which sub-classes the `BaseModel()` class.`
+which sub classes the `BaseModel()` class.`
 """
 from models.base_model import BaseModel
 
@@ -15,4 +15,3 @@ class Amenity(BaseModel):
     """
 
     name = ""
-

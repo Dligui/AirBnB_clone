@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Defines unittests for console.py.
+"""Defines unit tests for console.py.
 """
 from io import StringIO
 import os
@@ -1393,4 +1393,3 @@ class TestCityDotNotation(unittest.TestCase):
                                  f'City.destroy({cty.id})'))
             self.assertNotIn("City.{}".format(
                 cty.id), storage.all().keys())
-

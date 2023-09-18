@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Unit tests for the `state` module.
+"""Unit test for the `state` module.
 """
 import os
 import unittest
@@ -66,4 +66,3 @@ class TestState(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

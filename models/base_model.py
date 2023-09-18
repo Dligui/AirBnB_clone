@@ -10,7 +10,7 @@ from datetime import datetime
 class BaseModel():
     """
     Base class which defines all common
-    attributes/methods for other classes
+    attributes/ methods for other classes
     """
 
     def __init__(self, *args, **kwargs):
@@ -60,4 +60,3 @@ class BaseModel():
         dict['updated_at'] = dict['updated_at'].isoformat()
 
         return dict
-

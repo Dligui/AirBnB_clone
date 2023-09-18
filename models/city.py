@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """The `city` module
 
-It defines one class, `City(),
+It define one class, `City(),
 which sub-classes the `BaseModel()` class.`
 """
 from models.base_model import BaseModel
@@ -16,4 +16,3 @@ class City(BaseModel):
     """
     name = ""
     state_id = ""
-

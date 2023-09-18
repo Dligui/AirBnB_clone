@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Unit tests for the `review` module.
+"""Unit test for the `review` module.
 """
 import os
 import unittest
@@ -68,4 +68,3 @@ class TestReview(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

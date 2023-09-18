@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Unit tests for the `city` module.
+"""Unit test for the `city` module.
 """
 import os
 import unittest
@@ -80,4 +80,3 @@ class TestPlace(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

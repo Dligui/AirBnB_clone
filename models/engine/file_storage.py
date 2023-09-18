@@ -2,7 +2,7 @@
 """
 Module: file_storage.py
 
-Defines a `FileStorage` class.
+Define a `FileStorage` class.
 """
 import os
 import json
@@ -71,4 +71,3 @@ class FileStorage():
             FileStorage.__objects = {
                 k: current_classes[k.split('.')[0]](**v)
                 for k, v in deserialized.items()}
-

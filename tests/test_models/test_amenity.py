@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Unit tests for the `amenity` module.
+"""Unit test for the `amenity` module.
 """
 import os
 import unittest
@@ -69,4 +69,3 @@ class TestAmenity(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

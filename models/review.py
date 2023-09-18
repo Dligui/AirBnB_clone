@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """The `review` module.
 
-It defines one class, `Review(),
+It define one class, `Review(),
 which sub-classes the `BaseModel()` class.`
 """
 from models.base_model import BaseModel
@@ -21,4 +21,3 @@ class Review(BaseModel):
     text = ""
     user_id = ""
     place_id = ""
-
