@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Defines unit tests for console.py.
+"""Defines unittests for console.py.
 """
 from io import StringIO
 import os
