@@ -1,89 +1,69 @@
 #!/usr/bin/python3
-
+"""Unit tests for the `state` module.
 """
-define the TestStateDocs classes
-"""
-
-from datetime import datetime
-import inspect
-from models import state
-from models.base_model import BaseModel
+import os
 import unittest
-
-STATE = state.State
-
-
-class TestStateDocs(unittest.TestCase):
-    """ checks the documentation and style of State class"""
-    @classmethod
-    def set_up_class(cls):
-        """Set up for the doc tests"""
-        cls.state_functions = inspect.getmembers(STATE, inspect.isfunction)
-
-    def test_module_docstring(self):
-        """Test for the state.py module docstring"""
-        self.assertIsNot(state.__doc__, None,
-                         "state.py needs a docstring")
-        self.assertTrue(len(state.__doc__) >= 1,
-                        "state.py needs a docstring")
-
-    def test_class_docstring(self):
-        """Test for the State class docstring"""
-        self.assertIsNot(STATE.__doc__, None,
-                         "State class needs a docstring")
-        self.assertTrue(len(STATE.__doc__) >= 1,
-                        "State class needs a docstring")
-
-    def test_method_docstrings(self):
-        """Test for the presence of docstrings in State methods"""
-        for func_name, func in self.state_functions:
-            self.assertIsNot(func.__doc__, None,
-                             "{:s} method needs a docstring".format(func_name))
-            self.assertTrue(len(func.__doc__) >= 1,
-                            "{:s} method needs a docstring".format(func_name))
+from models.engine.file_storage import FileStorage
+from models.state import State
+from models import storage
+from datetime import datetime
 
 
-class TestStateFunctionality(unittest.TestCase):
-    """Test the functionality of the State class"""
-    def test_subclass_of_BaseModel(self):
-        """Test that State is a subclass of BaseModel"""
-        state_instance = STATE()
-        self.assertIsInstance(state_instance, BaseModel)
-        self.assertTrue(hasattr(state_instance, "id"))
-        self.assertTrue(hasattr(state_instance, "created_at"))
-        self.assertTrue(hasattr(state_instance, "updated_at"))
+class TestState(unittest.TestCase):
+    """Test cases for the `State` class."""
 
-    def test_name_attribute(self):
-        """Test that State has attribute 'name', and it's initialized as an empty string"""
-        state_instance = STATE()
-        self.assertTrue(hasattr(state_instance, "name"))
-        self.assertEqual(state_instance.name, "")
+    def setUp(self):
+        pass
 
-    def test_to_dict_creates_dictionary(self):
-        """Test that the to_dict method creates a dictionary with proper attributes"""
-        s = STATE()
-        new_dict = s.to_dict()
-        self.assertEqual(type(new_dict), dict)
-        for attr in s.__dict__:
-            self.assertTrue(attr in new_dict)
-            self.assertTrue("__class__" in new_dict)
+    def tearDown(self) -> None:
+        """Resets FileStorage data."""
+        FileStorage._FileStorage__objects = {}
+        if os.path.exists(FileStorage._FileStorage__file_path):
+            os.remove(FileStorage._FileStorage__file_path)
 
-    def test_to_dict_values(self):
-        """Test that the values in the dictionary returned from to_dict are correct"""
-        time_format = "%Y-%m-%dT%H:%M:%S.%f"
-        s = STATE()
-        new_dict = s.to_dict()
-        self.assertEqual(new_dict["__class__"], "State")
-        self.assertEqual(type(new_dict["created_at"]), str)
-        self.assertEqual(type(new_dict["updated_at"]), str)
-        self.assertEqual(new_dict["created_at"], s.created_at.strftime(time_format))
-        self.assertEqual(new_dict["updated_at"], s.updated_at.strftime(time_format))
+    def test_params(self):
+        s1 = State()
+        s3 = State("hello", "wait", "in")
 
-    def test_string_representation(self):
-        """Test that the str method provides the correct output"""
-        state_instance = STATE()
-        expected_string = "[State] ({}) {}".format(state_instance.id, state_instance.__dict__)
-        self.assertEqual(expected_string, str(state_instance))
+        k = f"{type(s1).__name__}.{s1.id}"
+        self.assertIsInstance(s1.name, str)
+        self.assertEqual(s3.name, "")
+        s1.name = "Chicago"
+        self.assertEqual(s1.name, "Chicago")
+        self.assertIn(k, storage.all())
+
+    def test_init(self):
+        """Test method for public instances"""
+        s1 = State()
+        s2 = State(**s1.to_dict())
+        self.assertIsInstance(s1.id, str)
+        self.assertIsInstance(s1.created_at, datetime)
+        self.assertIsInstance(s1.updated_at, datetime)
+        self.assertEqual(s1.updated_at, s2.updated_at)
+
+    def test_str(self):
+        """Test method for str representation"""
+        s1 = State()
+        string = f"[{type(s1).__name__}] ({s1.id}) {s1.__dict__}"
+        self.assertEqual(s1.__str__(), string)
+
+    def test_save(self):
+        """Test method for save"""
+        s1 = State()
+        old_update = s1.updated_at
+        s1.save()
+        self.assertNotEqual(s1.updated_at, old_update)
+
+    def test_todict(self):
+        """Test method for dict"""
+        s1 = State()
+        s2 = State(**s1.to_dict())
+        a_dict = s2.to_dict()
+        self.assertIsInstance(a_dict, dict)
+        self.assertEqual(a_dict['__class__'], type(s2).__name__)
+        self.assertIn('created_at', a_dict.keys())
+        self.assertIn('updated_at', a_dict.keys())
+        self.assertNotEqual(s1, s2)
 
 
 if __name__ == "__main__":

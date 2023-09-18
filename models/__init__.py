@@ -1,11 +1,9 @@
 #!/usr/bin/python3
+"""
+Module: __init__.py
+"""
+from models.engine import file_storage
 
-""" initializes the application's file storage"""
-
-from models.engine.file_storage import FileStorage
-
-# Create a unique FileStorage instance
-storage = FileStorage()
-
-# Command the reload() method to populate __objects from the JSON file
+storage = file_storage.FileStorage()
 storage.reload()
+

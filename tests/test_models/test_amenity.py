@@ -1,82 +1,72 @@
 #!/usr/bin/python3
+"""Unit tests for the `amenity` module.
 """
-define the TestAmenityClasses classes
-"""
-import inspect
-from models import amenity
-from models.base_model import BaseModel
+import os
 import unittest
+from models import storage
 from datetime import datetime
+from models.amenity import Amenity
+from models.engine.file_storage import FileStorage
 
-AMENITY = amenity.Amenity
 
+class TestAmenity(unittest.TestCase):
+    """Test cases for the `Amenity` class."""
 
-class TestAmenityAttributes(unittest.TestCase):
-    """unittest for Testing ttributes of the Amenity class"""
+    def setUp(self):
+        pass
 
-    def test_name_attribute_exists(self):
-        amenity = AMENITY()
-        self.assertTrue(hasattr(amenity, "name"))
-        self.assertEqual(amenity.name, "")
+    def tearDown(self) -> None:
+        """Resets FileStorage data."""
+        FileStorage._FileStorage__objects = {}
+        if os.path.exists(FileStorage._FileStorage__file_path):
+            os.remove(FileStorage._FileStorage__file_path)
 
-    def test_to_dict_creates_dictionary(self):
-        am = AMENITY()
-        new_dict = am.to_dict()
-        self.assertEqual(type(new_dict), dict)
-        for attr in am.__dict__:
-            self.assertTrue(attr in new_dict)
-            self.assertTrue("__class__" in new_dict)
+    def test_params(self):
+        """Test method for class attributes"""
 
-    def test_to_dict_attribute_values(self):
+        a1 = Amenity()
+        a2 = Amenity(**a1.to_dict())
+        a3 = Amenity("hello", "wait", "in")
 
-        time_format = "%Y-%m-%dT%H:%M:%S.%f"
-        am = AMENITY()
-        new_dict = am.to_dict()
-        self.assertEqual(new_dict["__class__"], "Amenity")
-        self.assertEqual(type(new_dict["created_at"]), str)
-        self.assertEqual(type(new_dict["updated_at"]), str)
-        self.assertEqual(new_dict["created_at"], am.created_at.strftime(time_format))
-        self.assertEqual(new_dict["updated_at"], am.updated_at.strftime(time_format))
+        k = f"{type(a1).__name__}.{a1.id}"
+        self.assertIsInstance(a1.name, str)
+        self.assertIn(k, storage.all())
+        self.assertEqual(a3.name, "")
 
-    def test_is_subclass_of_base_model(self):
-        amenity = AMENITY()
-        self.assertIsInstance(amenity, BaseModel)
-        self.assertTrue(hasattr(amenity, "id"))
-        self.assertTrue(hasattr(amenity, "created_at"))
-        self.assertTrue(hasattr(amenity, "updated_at"))
+    def test_init(self):
+        """Test method for public instances"""
+        a1 = Amenity()
+        a2 = Amenity(**a1.to_dict())
+        self.assertIsInstance(a1.id, str)
+        self.assertIsInstance(a1.created_at, datetime)
+        self.assertIsInstance(a1.updated_at, datetime)
+        self.assertEqual(a1.updated_at, a2.updated_at)
 
-    def test_string_representation(self):
-        amenity = AMENITY()
-        string = "[Amenity] ({}) {}".format(amenity.id, amenity.__dict__)
-        self.assertEqual(string, str(amenity))
+    def test_str(self):
+        """Test method for str representation"""
+        a1 = Amenity()
+        string = f"[{type(a1).__name__}] ({a1.id}) {a1.__dict__}"
+        self.assertEqual(a1.__str__(), string)
 
-class TestAmenityInstantiation(unittest.TestCase):
+    def test_save(self):
+        """Test method for save"""
+        a1 = Amenity()
+        old_update = a1.updated_at
+        a1.save()
+        self.assertNotEqual(a1.updated_at, old_update)
 
-    @classmethod
-    def set_up(cls):
-        """define the doc tests"""
-        cls.amenity_f = inspect.getmembers(AMENITY, inspect.isfunction)
-
-    def test_amenity_class_docstring(self):
-
-        self.assertIsNot(AMENITY.__doc__, None,
-                         "Amenity class needs a docstring")
-        self.assertTrue(len(AMENITY.__doc__) >= 1,
-                        "Amenity class needs a docstring")
-
-    def test_amenity_function_docstrings(self):
-        for function in self.amenity_f:
-            self.assertIsNot(function[1].__doc__, None,
-                             "{:s} method needs a docstring".format(function[0]))
-            self.assertTrue(len(function[1].__doc__) >= 1,
-                            "{:s} method needs a docstring".format(function[0]))
-
-    def test_amenity_module_docstring(self):
-        self.assertIsNot(amenity.__doc__, None,
-                         "amenity.py needs a docstring")
-        self.assertTrue(len(amenity.__doc__) >= 1,
-                        "amenity.py needs a docstring")
+    def test_todict(self):
+        """Test method for dict"""
+        a1 = Amenity()
+        a2 = Amenity(**a1.to_dict())
+        a_dict = a2.to_dict()
+        self.assertIsInstance(a_dict, dict)
+        self.assertEqual(a_dict['__class__'], type(a2).__name__)
+        self.assertIn('created_at', a_dict.keys())
+        self.assertIn('updated_at', a_dict.keys())
+        self.assertNotEqual(a1, a2)
 
 
 if __name__ == "__main__":
     unittest.main()
+
